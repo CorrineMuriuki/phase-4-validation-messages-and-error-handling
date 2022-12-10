@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 function MovieForm() {
+
   const [formData, setFormData] = useState({
     title: "",
     year: new Date().getFullYear(),
@@ -13,6 +14,7 @@ function MovieForm() {
     discount: false,
     female_director: false,
   });
+  const [errors, setErrors] = useState([]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -22,10 +24,19 @@ function MovieForm() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((newMovie) => console.log(newMovie));
+    });
+      // response.json() returns a Promise, we must await it
+  const data = await response.json();
+  if (response.ok) {
+    console.log("Movie created:", data);
+  } else {
+    setErrors(data.errors);
   }
+}
+
+     // .then((response) => response.json())
+     // .then((newMovie) => console.log(newMovie));
+  
 
   function handleChange(e) {
     const value =
